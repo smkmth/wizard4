@@ -37,7 +37,11 @@ namespace Wizard5.Functionality.Component
             {
                 X = setPos.X;
                 Y = setPos.Y;
-
+            }
+            if  (gameEvent is GE_Move move)
+            {
+                X += move.DeltaX;
+                Y += move.DeltaY;
             }
         }
     }

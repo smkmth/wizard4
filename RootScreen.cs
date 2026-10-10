@@ -1,4 +1,6 @@
-﻿namespace Wizard5.Scenes;
+﻿using SadConsole.Input;
+
+namespace Wizard5.Scenes;
 
 class RootScreen : ScreenObject
 {
@@ -7,17 +9,22 @@ class RootScreen : ScreenObject
 
     public RootScreen()
     {
-        SadConsole.Components.Cursor cursor = new();
         _mainSurface = new(GameSettings.GAME_WIDTH, GameSettings.GAME_HEIGHT);
 
         _mainSurface.UseKeyboard = true;
-        _mainSurface.SadComponents.Add(cursor);
-        cursor.IsEnabled = true;
+ 
 
         Children.Add(_mainSurface);
 
         WizardGame = new Game();
 
+    }
+
+    public override bool ProcessKeyboard(Keyboard keyboard)
+    {
+
+        WizardGame.ProcessKeyboard(keyboard);
+        return base.ProcessKeyboard(keyboard);
     }
 
     public override void Update(TimeSpan delta)
