@@ -12,7 +12,7 @@ namespace Wizard5
         public List<IGameComponent> Components { get; set; } = new List<IGameComponent>();
         public Renderer? Renderer { get; set; }  // faster access to the renderer component
 
-        public EventResponse ResolveGameEvent(GameEvent gameEvent)
+        public EventResponse? ResolveGameEvent(GameEvent gameEvent)
         {
             foreach (var component in Components)
             {

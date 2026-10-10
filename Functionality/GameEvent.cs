@@ -24,4 +24,39 @@ namespace Wizard5
 
     }
 
+    public class GE_SetPosition : GameEvent
+    {
+        public int X;
+        public int Y;
+
+        public GE_SetPosition(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
+    }
+
+    public class GE_Move : GameEvent
+    {
+        public int DeltaX;
+        public int DeltaY;
+
+        public GE_Move(int deltaX, int deltaY)
+        {
+            DeltaX = deltaX;
+            DeltaY = deltaY;
+        }
+    }
+
+    public class GE_Draw : GameEvent 
+    {
+        public ScreenSurface Surface;
+
+        public GE_Draw(ScreenSurface surface)
+        {
+            Surface = surface;
+        }
+    }
+
+
 }

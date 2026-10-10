@@ -10,13 +10,20 @@ namespace Wizard5.Functionality.Component
         private int X;
         private int Y;
 
-        public GameEntity? Owner { get; set; }
+        public Transform(GameEntity owner)
+        {
+            Owner = owner;
+        }
+
+        public GameEntity Owner { get; set; }
 
         public string ComponentName { get; } = "Transform";
 
+
+
         public IGameComponent Copy(GameEntity newOwner)
         {
-            return new Transform { Owner = newOwner, X = this.X, Y = this.Y };
+            return new Transform(Owner){ X = this.X, Y = this.Y };
         }
 
         public void ReceiveEvent(GameEvent gameEvent)
@@ -24,6 +31,13 @@ namespace Wizard5.Functionality.Component
             if (gameEvent is GE_RequestPosition requestPosition)
             {
                 requestPosition.Response = new R_RequestPosition { X = this.X, Y = this.Y };
+            }
+
+            if (gameEvent is GE_SetPosition setPos)
+            {
+                X = setPos.X;
+                Y = setPos.Y;
+
             }
         }
     }
