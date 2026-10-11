@@ -6,7 +6,7 @@ namespace Wizard5
 {
     public interface IGameComponent
     {
-        public GameEntity? Owner { get; set; }
+        public GameEntity? Owner { get; }
 
         public string ComponentName { get; } 
 

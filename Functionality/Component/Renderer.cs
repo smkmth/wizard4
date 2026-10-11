@@ -3,25 +3,25 @@ namespace Wizard5.Functionality.Component
 {
     public class Renderer : IGameComponent
     {
-        public GameEntity Owner { get; set; }
+        public GameEntity Owner { get; }
 
         public string ComponentName { get; } = "Renderer";
 
-        private Color _color;
-        private Color _backgroundColor;
-        private char _symbol;
+        private Color color;
+        private Color backgroundColor;
+        private char symbol;
 
-        public Renderer(GameEntity owner, Color color, Color backgroundColor, char symbol)
+        public Renderer(GameEntity owner, Color _color, Color _backgroundColor, char _symbol)
         {
             Owner = owner;
-            _color = color;
-            _backgroundColor = backgroundColor;
-            _symbol = symbol;
+            this.color = _color;
+            this.backgroundColor = _backgroundColor;
+            this.symbol = _symbol;
         }
 
         public IGameComponent Copy(GameEntity newOwner)
         {
-            return new Renderer(Owner,_color,_backgroundColor,_symbol);   
+            return new Renderer(Owner,color,backgroundColor,symbol);   
         }
 
         public void ReceiveEvent(GameEvent gameEvent)
@@ -35,9 +35,9 @@ namespace Wizard5.Functionality.Component
         public void Draw(ScreenSurface mainSurface)
         {
             var position = (R_RequestPosition)Owner?.ResolveGameEvent(new GE_RequestPosition());
-            mainSurface.SetForeground(position.X, position.Y, _color );
-            mainSurface.SetBackground(position.X, position.Y, _backgroundColor);
-            mainSurface.SetGlyph(position.X, position.Y, _symbol);
+            mainSurface.SetForeground(position.X, position.Y, color );
+            mainSurface.SetBackground(position.X, position.Y, backgroundColor);
+            mainSurface.SetGlyph(position.X, position.Y, symbol);
 
         }
     }

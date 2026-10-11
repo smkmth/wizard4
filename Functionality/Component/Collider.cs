@@ -13,7 +13,7 @@ namespace Wizard5.Functionality.Component
             Owner = owner;
         }
 
-        public GameEntity Owner { get; set; }
+        public GameEntity Owner { get; }
 
         public string ComponentName { get; } = "Collider";
 

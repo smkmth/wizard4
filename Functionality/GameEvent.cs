@@ -79,5 +79,34 @@ namespace Wizard5
         }
     }
 
+    public class GE_TakeDamage :GameEvent
+    {
+        public int damageAmount;
+
+        public GE_TakeDamage(int _damageAmount)
+        {
+            this.damageAmount = _damageAmount;
+        }
+    }
+
+    public class GE_FormAttack : GameEvent
+    {
+        public GameEntity Target;
+
+        public GE_FormAttack(GameEntity target)
+        {
+            Target = target;
+        }
+    }
+
+    public class R_FormAttackResult : EventResponse
+    {
+        public int damage;
+
+        public R_FormAttackResult(int damage)
+        {
+            this.damage = damage;
+        }
+    }
 
 }

@@ -21,5 +21,15 @@ namespace Wizard5
             return gameEvent.Response;
         }
 
+        public (int,int) GetPosition()
+        {
+            var pos = (R_RequestPosition)ResolveGameEvent(new GE_RequestPosition());
+            if (pos != null)
+            {
+                return (pos.X, pos.Y);
+            }
+            return (-1, 1);
+        }
+
     }
 }
