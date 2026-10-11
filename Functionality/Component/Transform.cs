@@ -15,7 +15,7 @@ namespace Wizard5.Functionality.Component
             Owner = owner;
         }
 
-        public GameEntity Owner { get; }
+        public GameEntity Owner { get; set; }
 
         public string ComponentName { get; } = "Transform";
 
@@ -23,7 +23,7 @@ namespace Wizard5.Functionality.Component
 
         public IGameComponent Copy(GameEntity newOwner)
         {
-            return new Transform(Owner){ x = this.x, y = this.y };
+            return new Transform(newOwner) { x = this.x, y = this.y };
         }
 
         public void ReceiveEvent(GameEvent gameEvent)

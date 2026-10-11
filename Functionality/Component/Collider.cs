@@ -13,7 +13,7 @@ namespace Wizard5.Functionality.Component
             Owner = owner;
         }
 
-        public GameEntity Owner { get; }
+        public GameEntity Owner { get; set; }
 
         public string ComponentName { get; } = "Collider";
 
@@ -21,7 +21,7 @@ namespace Wizard5.Functionality.Component
 
         public IGameComponent Copy(GameEntity newOwner)
         {
-            return new Collider(Owner) {};
+            return new Collider(newOwner) {};
         }
 
         public void ReceiveEvent(GameEvent gameEvent)

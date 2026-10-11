@@ -17,75 +17,67 @@ namespace Wizard5
 
         public Game()
         {
-            string filePath = "maps/map2";
+            Instance = this;
 
-            if (File.Exists(filePath))
+            LoadMap("maps/map2");
+
+            var startGameEvent = new GE_GameStart();
+            foreach (var ent in Entities)
+            {
+                ent.ResolveGameEvent(startGameEvent);
+            }
+
+        }
+
+        private void LoadMap(string mapPath)
+        {
+
+            if (File.Exists(mapPath))
             {
                 // Reads all text into a single string
-                string[] lines = File.ReadAllLines(filePath);
+                string[] lines = File.ReadAllLines(mapPath);
                 for (int y = 0; y < GameSettings.GAME_HEIGHT; y++)
                 {
 
                     for (int x = 0; x < GameSettings.GAME_WIDTH; x++)
                     {
-                        var charpt = lines[y][x];
-                        if (charpt == '#')
-                        {
-                            CreateWall(x,y);
-                        }
-                        if (charpt == '@')
-                        {
-                            CreatePlayer(x, y);
-                        }
+                        var charatpt = lines[y][x];
+                        PlaceObjectAtPlace(y, x, charatpt);
                     }
                 }
             }
-
-            Instance = this;
-
         }
 
-        private void CreatePlayer(int x, int y)
+        private void PlaceObjectAtPlace(int y, int x, char charatpt)
         {
-
-            Player = CreateGenericEntity(Color.White, Color.Transparent, '@');
-            Player.ResolveGameEvent(new GE_SetPosition(x, y));
-            Player.Components.Add(new Health(Player, 10, CreateGenericEntity(Color.Red, Color.Transparent, '\'')));
-            Player.Components.Add(new Attack(Player, 3));
-
-            Entities.Add(Player);
-
-        }
-
-        private void CreateWall(int x, int y)
-        {
-            var otherEnt = CreateGenericEntity(Color.White, Color.Transparent, '#');
-            otherEnt.ResolveGameEvent(new GE_SetPosition(x, y));
-
-            var wallcorpse = new GameEntity();
-            wallcorpse.Components.Add(new Transform(wallcorpse));
-            wallcorpse.Components.Add(new Renderer(wallcorpse, Color.White, Color.Transparent, '\''));
-
-            otherEnt.Components.Add(new Health(otherEnt, 10, wallcorpse));
-            Entities.Add(otherEnt);
-        }
-
-        public GameEntity CreateGenericEntity(Color color, Color bgColor,char symbol = '#')
-        {
-            var ent = new GameEntity();
-            ent.Components.Add(new Transform(ent));
-            ent.Components.Add(new Renderer(ent, color, bgColor, symbol));
-            ent.Components.Add(new Collider(ent));
-            return ent;
-        }
-
-        public void Draw(ScreenSurface mainSurface)
-        {
-            var drawEvent = new GE_Draw(mainSurface);
-            foreach (var entity in Entities)
+            if (charatpt == '#')
             {
-                entity.ResolveGameEvent(drawEvent);
-            }   
+                CreateEntity("Items", "Wall", x, y);
+            }
+            if (charatpt == '@')
+            {
+                CreateEntity("Creatures", "Player", x, y);
+            }
+        }
+
+        private void CreateEntity(string directory, string name, int x, int y)
+        {
+
+            var gameEntity = YamlDataReader.CreateEntityCached(directory, name);
+            PlaceEntity(gameEntity, x, y);
+
+        }
+
+        public void PlaceEntity(GameEntity entity, int x, int y)
+        {
+            entity.ResolveGameEvent(new GE_SetPosition(x, y));
+            Entities.Add(entity);
+        }
+
+        public void DestroyEntity(GameEntity entity)
+        {
+            Entities.Remove(entity);
+
         }
 
        public List<GameEntity> GetEntitiesAtPosition(int x, int y)
@@ -94,8 +86,8 @@ namespace Wizard5
             var checkEntityEvent = new GE_RequestPosition();
             foreach (var entity in Entities)
             {
-                var pos = (R_RequestPosition)entity.ResolveGameEvent(checkEntityEvent);
-                if (pos.X == x && pos.Y == y)
+                var pos = entity.GetPosition();
+                if (pos.Item1 == x && pos.Item2 == y)
                 {
                     entities.Add(entity);
                 }
@@ -103,6 +95,16 @@ namespace Wizard5
 
             return entities;
        }
+
+        public void Draw(ScreenSurface mainSurface)
+        {
+            var drawEvent = new GE_Draw(mainSurface);
+            foreach (var entity in Entities)
+            {
+                entity.ResolveGameEvent(drawEvent);
+            }
+            Player.ResolveGameEvent(drawEvent);//lazy just draw player twice
+        }
 
         public void ProcessKeyboard(Keyboard keyboard)
         {
@@ -132,16 +134,6 @@ namespace Wizard5
             }
         }
 
-        public void CreateEntity(GameEntity entity, int x, int y)
-        {
-            entity.ResolveGameEvent(new GE_SetPosition(x, y));
-            Entities.Add(entity);
-        }
-
-        public void DestroyEntity(GameEntity entity)
-        {
-            Entities.Remove(entity);    
-
-        }
+   
     }
 }

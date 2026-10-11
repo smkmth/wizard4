@@ -8,13 +8,13 @@ namespace Wizard5.Functionality.Component
     {
         int damage;
 
-        public Attack(GameEntity owner, int _damage)
+        public Attack(GameEntity owner, int damage)
         {
             Owner = owner;
-            damage = _damage;
+            this.damage = damage;
         }
 
-        public GameEntity Owner { get; }
+        public GameEntity Owner { get; set; }
 
         public string ComponentName { get; } = "Attacker";
 
@@ -22,7 +22,7 @@ namespace Wizard5.Functionality.Component
 
         public IGameComponent Copy(GameEntity newOwner)
         {
-            return new Attack(Owner, damage) { };
+            return new Attack(newOwner, damage) { };
         }
 
         public void ReceiveEvent(GameEvent gameEvent)

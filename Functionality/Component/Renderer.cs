@@ -3,7 +3,7 @@ namespace Wizard5.Functionality.Component
 {
     public class Renderer : IGameComponent
     {
-        public GameEntity Owner { get; }
+        public GameEntity Owner { get; set; }
 
         public string ComponentName { get; } = "Renderer";
 
@@ -11,17 +11,17 @@ namespace Wizard5.Functionality.Component
         private Color backgroundColor;
         private char symbol;
 
-        public Renderer(GameEntity owner, Color _color, Color _backgroundColor, char _symbol)
+        public Renderer(GameEntity owner, Color color, Color backgroundColor, char symbol)
         {
             Owner = owner;
-            this.color = _color;
-            this.backgroundColor = _backgroundColor;
-            this.symbol = _symbol;
+            this.color = color;
+            this.backgroundColor = backgroundColor;
+            this.symbol = symbol;
         }
 
         public IGameComponent Copy(GameEntity newOwner)
         {
-            return new Renderer(Owner,color,backgroundColor,symbol);   
+            return new Renderer(newOwner, color,backgroundColor,symbol);   
         }
 
         public void ReceiveEvent(GameEvent gameEvent)

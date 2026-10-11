@@ -11,15 +11,15 @@ namespace Wizard5.Functionality.Component
         private int currentValue;
         private GameEntity corpse;
 
-        public Health(GameEntity owner, int _baseValue, GameEntity _corpse)
+        public Health(GameEntity owner, int baseValue, GameEntity corpse)
         {
             Owner = owner;
-            baseValue = _baseValue;
-            currentValue= baseValue;
-            corpse = _corpse;
+            this.baseValue = baseValue;
+            currentValue = this.baseValue;
+            this.corpse = corpse;
         }
 
-        public GameEntity Owner { get; }
+        public GameEntity Owner { get; set; }
 
         public string ComponentName { get; } = "Health";
 
@@ -27,7 +27,7 @@ namespace Wizard5.Functionality.Component
 
         public IGameComponent Copy(GameEntity newOwner)
         {
-            return new Health(Owner, baseValue, corpse) { };
+            return new Health(newOwner, baseValue, corpse) { };
         }
 
         public void ReceiveEvent(GameEvent gameEvent)
@@ -38,7 +38,7 @@ namespace Wizard5.Functionality.Component
                 if (currentValue <= 0)
                 {
                     var pos = Owner.GetPosition();
-                    Game.Instance.CreateEntity(corpse,pos.Item1, pos.Item2);
+                    Game.Instance.PlaceEntity(corpse,pos.Item1, pos.Item2);
                     Game.Instance.DestroyEntity(Owner);
                 }
             }

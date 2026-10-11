@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SadConsole.Entities;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -6,10 +7,29 @@ using Wizard5.Functionality.Component;
 
 namespace Wizard5
 {
+
     public class GameEntity
     {
-
+        public static int EntityCounter;
+        public int EntityID;
+        public string Name;
         public List<IGameComponent> Components { get; set; } = new List<IGameComponent>();
+
+
+        public GameEntity(string name, List<IGameComponent> components)
+        {
+            this.Name = name;
+            this.Components = components;
+            EntityID = EntityCounter;
+            EntityCounter++;
+        }
+
+        public GameEntity()
+        {
+            EntityID = EntityCounter;
+            EntityCounter++;
+        }
+
 
         public EventResponse? ResolveGameEvent(GameEvent gameEvent)
         {
@@ -19,6 +39,17 @@ namespace Wizard5
             }
 
             return gameEvent.Response;
+        }
+
+        public GameEntity Copy(GameEntity newOwner)
+        {
+            newOwner.Name = Name;
+
+            foreach (IGameComponent comp in Components)
+            {
+                newOwner.Components.Add(comp.Copy(newOwner));
+            }
+            return newOwner;
         }
 
         public (int,int) GetPosition()

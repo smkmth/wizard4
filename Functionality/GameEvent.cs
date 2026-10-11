@@ -109,4 +109,9 @@ namespace Wizard5
         }
     }
 
+    public class GE_GameStart : GameEvent
+    {
+
+    }
+
 }

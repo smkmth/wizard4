@@ -16,7 +16,13 @@
   </ItemGroup>
   
   <ItemGroup>
-    <None Include="Fonts\**\*.*">
+    <None Include="fonts\**\*.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="data\**\*.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -32,6 +38,7 @@
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.4.1" />
     <PackageReference Include="SadConsole.Host.MonoGame" Version="10.10.0" />
     <PackageReference Include="SadConsole.Extended" Version="10.10.0" />
+    <PackageReference Include="YamlDotNet" Version="18.1.0" />
   </ItemGroup>
 
 </Project>
