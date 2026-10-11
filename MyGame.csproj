@@ -21,6 +21,13 @@
     </None>
   </ItemGroup>
 
+
+  <ItemGroup>
+    <None Include="maps\**\*.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.4.1" />
     <PackageReference Include="SadConsole.Host.MonoGame" Version="10.10.0" />

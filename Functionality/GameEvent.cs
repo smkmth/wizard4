@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SadConsole.Entities;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -55,6 +56,26 @@ namespace Wizard5
         public GE_Draw(ScreenSurface surface)
         {
             Surface = surface;
+        }
+    }
+
+    public class GE_Collide : GameEvent
+    {
+        public GameEntity movingEntity; //all entity collisions have an entity that is moving into the collision
+
+        public GE_Collide(GameEntity movingEntity)
+        {
+            this.movingEntity = movingEntity;
+        }
+    }
+
+    public class R_CollideResult : EventResponse
+    {
+        public bool canMove = false;
+        
+        public R_CollideResult(bool canMove)
+        {
+            this.canMove = canMove;
         }
     }
 

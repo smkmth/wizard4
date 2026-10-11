@@ -40,6 +40,20 @@ namespace Wizard5.Functionality.Component
             }
             if  (gameEvent is GE_Move move)
             {
+                var entsAtFuturePosition = Game.Instance.GetEntitiesAtPosition(X + move.DeltaX, Y + move.DeltaY);
+                var canMove = true;
+                var tryingToCollide = new GE_Collide(Owner);
+
+                foreach (var ent in entsAtFuturePosition)
+                {
+                    var result = (R_CollideResult)ent.ResolveGameEvent(tryingToCollide);
+                    if (result != null && result.canMove == false)
+                    {
+                        return; //we cant move
+                    }
+                }
+
+
                 X += move.DeltaX;
                 Y += move.DeltaY;
             }
