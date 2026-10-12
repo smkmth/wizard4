@@ -28,8 +28,14 @@ namespace Wizard5.Functionality.Component
         {
             if (gameEvent is GE_GameStart attack)
             {
-                Game.Instance.Player = Owner;
+                Possess();
             }
+        }
+
+        private void Possess()
+        {
+            Game.Instance.Map.Player = Owner;
+            Game.Instance.Map.TriggerGlobalEvent(new GE_PlayerPossess(Owner));
         }
     }
 }

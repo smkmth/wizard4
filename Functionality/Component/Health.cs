@@ -38,8 +38,8 @@ namespace Wizard5.Functionality.Component
                 if (currentValue <= 0)
                 {
                     var pos = Owner.GetPosition();
-                    Game.Instance.PlaceEntity(corpse,pos.Item1, pos.Item2);
-                    Game.Instance.DestroyEntity(Owner);
+                    Game.Instance.Map.PlaceEntity(corpse,pos.Item1, pos.Item2);
+                    Game.Instance.Map.DestroyEntity(Owner);
                 }
             }
         }

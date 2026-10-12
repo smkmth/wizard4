@@ -26,3 +26,7 @@ components:
    Damage: 3
 -  #player
    ComponentName: Player
+-  #abilityholder
+   ComponentName: AbilityHolder
+-  #abilitymindcontrol
+   ComponentName: AbilityMindControl

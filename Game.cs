@@ -6,104 +6,32 @@ using Wizard5.Functionality.Component;
 using System;
 using System.IO;
 using System.Linq.Expressions;
+using Wizard5.Functionality;
 
 namespace Wizard5
 {
     public class Game
     {
         public static Game Instance;
-        public List<GameEntity> Entities { get; set; } = new List<GameEntity>();
-        public GameEntity Player;
+        public Map Map;
+        public UI UI;
 
         public Game()
         {
             Instance = this;
+            Map = new Map();
+            UI = new UI();
 
-            LoadMap("maps/map2");
-
-            var startGameEvent = new GE_GameStart();
-            foreach (var ent in Entities)
-            {
-                ent.ResolveGameEvent(startGameEvent);
-            }
-
+            Map.LoadMap("maps/map2");
         }
 
-        private void LoadMap(string mapPath)
+      
+        public void Draw(ScreenSurface mapSurface, ScreenSurface uiSurface)
         {
-
-            if (File.Exists(mapPath))
-            {
-                // Reads all text into a single string
-                string[] lines = File.ReadAllLines(mapPath);
-                for (int y = 0; y < GameSettings.GAME_HEIGHT; y++)
-                {
-
-                    for (int x = 0; x < GameSettings.GAME_WIDTH; x++)
-                    {
-                        var charatpt = lines[y][x];
-                        PlaceObjectAtPlace(y, x, charatpt);
-                    }
-                }
-            }
-        }
-
-        private void PlaceObjectAtPlace(int y, int x, char charatpt)
-        {
-            if (charatpt == '#')
-            {
-                CreateEntity("Items", "Wall", x, y);
-            }
-            if (charatpt == '@')
-            {
-                CreateEntity("Creatures", "Player", x, y);
-            }
-        }
-
-        private void CreateEntity(string directory, string name, int x, int y)
-        {
-
-            var gameEntity = YamlDataReader.CreateEntityCached(directory, name);
-            PlaceEntity(gameEntity, x, y);
-
-        }
-
-        public void PlaceEntity(GameEntity entity, int x, int y)
-        {
-            entity.ResolveGameEvent(new GE_SetPosition(x, y));
-            Entities.Add(entity);
-        }
-
-        public void DestroyEntity(GameEntity entity)
-        {
-            Entities.Remove(entity);
-
-        }
-
-       public List<GameEntity> GetEntitiesAtPosition(int x, int y)
-       {
-            var entities = new List<GameEntity>();
-            var checkEntityEvent = new GE_RequestPosition();
-            foreach (var entity in Entities)
-            {
-                var pos = entity.GetPosition();
-                if (pos.Item1 == x && pos.Item2 == y)
-                {
-                    entities.Add(entity);
-                }
-            }
-
-            return entities;
-       }
-
-        public void Draw(ScreenSurface mainSurface)
-        {
-            var drawEvent = new GE_Draw(mainSurface);
-            foreach (var entity in Entities)
-            {
-                entity.ResolveGameEvent(drawEvent);
-            }
-            Player.ResolveGameEvent(drawEvent);//lazy just draw player twice
+            mapSurface.Clear();
+            Map.Draw(mapSurface);
+            uiSurface.Clear();
+            UI.Draw(uiSurface);
         }
 
         public void ProcessKeyboard(Keyboard keyboard)
@@ -113,27 +41,84 @@ namespace Wizard5
                  
                 if ((key.Key == Keys.Left))
                 {
-                    Player.ResolveGameEvent(new GE_Move(-1, 0));
+                    Map.Player?.ResolveGameEvent(new GE_Move(-1, 0));
 
                 }
                 if ((key.Key == Keys.Down))
                 {
-                    Player.ResolveGameEvent(new GE_Move(0, 1));
+                    Map.Player?.ResolveGameEvent(new GE_Move(0, 1));
 
                 }
                 if ((key.Key == Keys.Right))
                 {
-                    Player.ResolveGameEvent(new GE_Move(1, 0));
+                    Map.Player?.ResolveGameEvent(new GE_Move(1, 0));
 
                 }
                 if ((key.Key == Keys.Up))
                 {
-                    Player.ResolveGameEvent(new GE_Move(0, -1));
+                    Map.Player?.ResolveGameEvent(new GE_Move(0, -1));
 
+                }
+                if ((key.Key == Keys.Z))
+                {   
+                    Map.Player?.ResolveGameEvent(new GE_TriggerAbilityKey('z'));
+                }
+                if ((key.Key == Keys.X))
+                {
+                    Map.Player?.ResolveGameEvent(new GE_TriggerAbilityKey('x'));
+                }
+                if ((key.Key == Keys.C))
+                {
+                    Map.Player?.ResolveGameEvent(new GE_TriggerAbilityKey('c'));
                 }
             }
         }
 
-   
+        Action<GameEntity> FoundTarget = null;
+
+        public void RequestTarget(Action<GameEntity> foundTarget)
+        {
+            FoundTarget = foundTarget;
+        }
+
+        internal void ProcessMouse(MouseScreenObjectState state)
+        {
+            var ents = Map.GetEntitiesAtPosition(state.SurfaceCellPosition.X, state.SurfaceCellPosition.Y);
+            if (ents != null)
+            {
+                if (ents.Count == 0)
+                {
+                    UI.MouseOver = state.SurfaceCellPosition.ToString() + " Floor";
+                    return;
+                }
+                string entNames = "";   
+                foreach (var ent in ents)
+                {
+                    entNames += ent.Name + " "; 
+                }
+                UI.MouseOver = state.SurfaceCellPosition.ToString() + " " +  entNames;
+
+                if (state.Mouse.LeftClicked) 
+                {
+                    if (ents.Count > 0)
+                    {
+                      
+                        FoundTarget?.Invoke(ents[0]);  //deal with stacks of targets later
+                        FoundTarget = null;
+                        
+                    }
+                }
+            }
+            else
+            {
+                UI.MouseOver = UI.DefaultMouseText;
+            }
+        }
+
+        internal void ProcessUIMouse(MouseScreenObjectState args)
+        {
+            UI.MouseOver = UI.DefaultMouseText;
+
+        }
     }
 }

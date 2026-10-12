@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Wizard5;
+using Wizard5.Functionality;
 
 namespace Wizard5
 {
@@ -114,4 +116,75 @@ namespace Wizard5
 
     }
 
+    public class GE_PlayerPossess : GameEvent
+    {
+        public GameEntity Player;
+        public GE_PlayerPossess(GameEntity player)
+        {
+            Player = player;
+        }
+    }
+
+    public class R_RegisterAbility : EventResponse
+    {
+        public List<(string, AbilityType)> AbilityContainers = new List<(string, AbilityType) >();
+
+    }
+    
+    public class GE_RegisterAbilities : GameEvent
+    {
+        public GameEvent AbilityTriggerEvent;
+    }   
+
+    public class GE_TriggerAbilityKey : GameEvent
+    {
+        public char AbilityKey;
+
+        //we dont know what the ability needs - just add everything
+        public GameEntity? Target; 
+        public Point TargetPoint;
+
+        public GE_TriggerAbilityKey(char abilityKey)
+        {
+            AbilityKey = abilityKey;
+        }
+    }
+
+    public class  GE_TriggerAbility : GameEvent
+    {
+        public string AbilityName;
+
+        public GE_TriggerAbility(string abilityName)
+        {
+            AbilityName = abilityName;
+        }
+    }
+
+
+    public class GE_TriggerAbilityTargetEntity : GE_TriggerAbility
+    {
+        public string AbilityName;
+
+        public GameEntity Target;
+
+        public GE_TriggerAbilityTargetEntity(GameEntity target, string abilityName) : base(abilityName)
+        {
+            Target = target;
+        }
+    }
+
+
+    public class GE_TriggerMindControl : GameEvent
+    {
+
+    }
+
+    public class GE_MindControl : GameEvent
+    {
+        public GameEntity OldEntity;
+        public GE_MindControl(GameEntity target)
+        {
+            OldEntity = target;
+        }
+    }
 }
