@@ -19,6 +19,11 @@ namespace Wizard5.Functionality.Component.Skills
       
         IGameComponent IGameComponent.Copy(GameEntity newOwner)
         {
+            return CopyImplementation(newOwner);
+        }
+
+        protected virtual IGameComponent CopyImplementation(GameEntity newOwner)
+        {
             return new AbilityBase(newOwner);
         }
 

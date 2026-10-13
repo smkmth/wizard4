@@ -19,13 +19,13 @@ components:
    ComponentName: Collider
 -  #health
    ComponentName: Health
-   BaseValue: 10
+   BaseValue: 1
    Corpse: '>PlayerCorpse'
 -  #attack
    ComponentName: Attack
    Damage: 3
--  #player
-   ComponentName: Player
+-  #possesable
+   ComponentName: Possesable
 -  #abilityholder
    ComponentName: AbilityHolder
 -  #abilitymindcontrol

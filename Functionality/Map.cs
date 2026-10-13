@@ -9,8 +9,11 @@ namespace Wizard5.Functionality
         public List<GameEntity> Entities { get; set; } = new List<GameEntity>();
         public GameEntity Player;
 
+        public string CurrentMap = "maps/prisoncell";
         public void LoadMap(string mapPath)
         {
+            Entities.Clear();
+            Player = null;
 
             if (File.Exists(mapPath))
             {
@@ -51,20 +54,33 @@ namespace Wizard5.Functionality
             }
             if (charatpt == '@')
             {
-                CreateEntity("Creatures", "Player", x, y);
+                var player = CreateEntity("Creatures", "Player", x, y);
+                player.ResolveGameEvent(new GE_PossessEntity(null));
             }
             if (charatpt == 'g')
             {
                 CreateEntity("Creatures", "Goblin", x, y);
             }
+            if (charatpt == '~')
+            {
+                CreateEntity("Items", "Lava", x, y);
+            }
+            if (charatpt == 'k')
+            {
+                CreateEntity("Creatures", "Knight", x, y);
+            }
+            if (charatpt == '+')
+            {
+                CreateEntity("Items", "Door", x, y);
+            }
         }
 
-        private void CreateEntity(string directory, string name, int x, int y)
+        private GameEntity CreateEntity(string directory, string name, int x, int y)
         {
 
             var gameEntity = YamlDataReader.CreateEntityCached(directory, name);
             PlaceEntity(gameEntity, x, y);
-
+            return gameEntity;
         }
 
         public void PlaceEntity(GameEntity entity, int x, int y)

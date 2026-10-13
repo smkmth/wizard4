@@ -54,13 +54,25 @@ namespace Wizard5.Functionality
             {
                 CKey =abilities['c'].AbilityName;
             }
+            else
+            {
+                CKey = "No Ability";
+            }
             if (abilities.ContainsKey('x'))
             {
                 XKey = abilities['x'].AbilityName;
             }
+            else
+            {
+                XKey = "No Ability";
+            }
             if (abilities.ContainsKey('z'))
             {
                 ZKey = abilities['z'].AbilityName;
+            }
+            else
+            {
+                ZKey = "No Ability";
             }
 
         }

@@ -22,7 +22,7 @@ namespace Wizard5
             Map = new Map();
             UI = new UI();
 
-            Map.LoadMap("maps/map2");
+            Map.LoadMap(Map.CurrentMap);
         }
 
       

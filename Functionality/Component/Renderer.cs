@@ -30,6 +30,15 @@ namespace Wizard5.Functionality.Component
             {
                 Draw(draw.Surface);
             }
+            if (gameEvent is GE_ChangeRenderSymbol symbol)
+            {
+                this.symbol = symbol.symbol;
+            }
+            if (gameEvent is GE_ChangeRenderColor color)
+            {
+                this.color = color.color;
+                this.backgroundColor= color.bgcolor;
+            }
         }
 
         public void Draw(ScreenSurface mainSurface)

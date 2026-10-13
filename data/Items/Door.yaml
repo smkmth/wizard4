@@ -1,0 +1,20 @@
+name: Door
+components:
+-  #transform
+   ComponentName: Transform
+-  #renderer
+   ComponentName: Renderer
+   Color:
+      B: 255
+      G: 255
+      R: 255
+      A: 255
+   BackgroundColor:
+      B: 0
+      G: 0
+      R: 0
+      A: 0
+   Symbol: '+'
+-  #collider	
+   ComponentName: Door
+   IsOpen: false

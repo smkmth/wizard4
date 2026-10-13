@@ -14,6 +14,10 @@ namespace Wizard5.Functionality.Component.Abilities
             abilityName = "MindControl";
         }
 
+        protected override IGameComponent CopyImplementation(GameEntity newOwner)
+        {
+            return new AbilityMindControl(newOwner);
+        }
 
         protected override (string, AbilityType) RegisterAbility()
         {
@@ -22,7 +26,7 @@ namespace Wizard5.Functionality.Component.Abilities
         protected override void TriggerAbility(GE_TriggerAbility trigger)
         {
             var targetAbility = trigger as GE_TriggerAbilityTargetEntity;
-            targetAbility.Target.ResolveGameEvent(new GE_MindControl(Owner));
+            targetAbility.Target.ResolveGameEvent(new GE_PossessEntity(Owner));
 
 
         }

@@ -26,17 +26,38 @@ namespace Wizard5.Functionality.Component
 
         public void ReceiveEvent(GameEvent gameEvent)
         {
-            if (gameEvent is GE_MindControl mindControl)
+            if (gameEvent is GE_PlayerUnPossess unpossess)
             {
-                currentController = mindControl.OldEntity;
+                Owner.ResolveGameEvent(new GE_ChangeRenderColor(Color.White, Color.Transparent));
+
+            }
+            if (gameEvent is GE_PossessEntity possess)
+            {
+                if (currentController != null)
+                {
+                    currentController.ResolveGameEvent(new GE_PlayerUnPossess());
+                }
+                currentController = possess.Controller;
                 Possess();
-            }   
+            }
+            if (gameEvent is GE_Death death)
+            {
+                if (currentController == null)
+                {
+                    Game.Instance.Map.LoadMap(Game.Instance.Map.CurrentMap);
+                }
+                else
+                {
+                    currentController.ResolveGameEvent(new GE_PossessEntity(null));
+                }
+            }
         }
 
         private void Possess()
         {
             Game.Instance.Map.Player = Owner;
             Game.Instance.Map.TriggerGlobalEvent(new GE_PlayerPossess(Owner));
+            Owner.ResolveGameEvent(new GE_ChangeRenderColor(Color.Gold, Color.Transparent));
         }
     }
 }

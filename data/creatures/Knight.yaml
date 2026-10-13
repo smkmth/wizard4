@@ -1,0 +1,31 @@
+name: Knight
+components:
+-  #transform
+   ComponentName: Transform
+-  #renderer
+   ComponentName: Renderer
+   Color:
+      B: 128
+      G: 128
+      R: 128
+      A: 255
+   BackgroundColor:
+      B: 0
+      G: 0
+      R: 0
+      A: 0
+   Symbol: 'k'
+-  #collider	
+   ComponentName: Collider
+-  #health
+   ComponentName: Health
+   BaseValue: 1
+   Corpse: '>KnightCorpse'
+-  #attack
+   ComponentName: Attack
+   Damage: 3
+-  #possesable
+   ComponentName: Possesable
+-  #abilityholder
+   ComponentName: AbilityHolder
+

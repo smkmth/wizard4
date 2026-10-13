@@ -17,7 +17,3 @@ components:
    Symbol: '#'
 -  #collider	
    ComponentName: Collider
--  #health
-   ComponentName: Health
-   BaseValue: 10
-   Corpse: '>BrokenWall'

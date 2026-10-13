@@ -19,8 +19,8 @@ components:
    ComponentName: Collider
 -  #health
    ComponentName: Health
-   BaseValue: 10
-   Corpse: '>PlayerCorpse'
+   BaseValue: 1
+   Corpse: '>GoblinCorpse'
 -  #attack
    ComponentName: Attack
    Damage: 3

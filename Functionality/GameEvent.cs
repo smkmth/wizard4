@@ -60,6 +60,32 @@ namespace Wizard5
             Surface = surface;
         }
     }
+    public class GE_ChangeRenderSymbol : GameEvent
+    {
+        public char symbol;
+
+        public GE_ChangeRenderSymbol(char symbol)
+        {
+            this.symbol = symbol;
+        }
+    }
+
+    public class GE_ChangeRenderColor : GameEvent
+    {
+        public Color color;
+        public Color bgcolor;
+
+        public GE_ChangeRenderColor(Color color, Color bgcolor)
+        {
+            this.color = color;
+            this.bgcolor = bgcolor;
+        }
+    }
+
+    public class GE_PlayerUnPossess : GameEvent
+    {
+
+    }
 
     public class GE_Collide : GameEvent
     {
@@ -179,12 +205,17 @@ namespace Wizard5
 
     }
 
-    public class GE_MindControl : GameEvent
+    public class GE_PossessEntity : GameEvent
     {
-        public GameEntity OldEntity;
-        public GE_MindControl(GameEntity target)
+        public GameEntity? Controller;
+        public GE_PossessEntity(GameEntity? controller)
         {
-            OldEntity = target;
+            Controller = controller;
         }
+    }
+
+    public class GE_Death : GameEvent
+    {
+
     }
 }

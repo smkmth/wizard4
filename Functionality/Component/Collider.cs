@@ -7,7 +7,6 @@ namespace Wizard5.Functionality.Component
 {
     public class Collider : IGameComponent
     {
-
         public Collider(GameEntity owner)
         {
             Owner = owner;
@@ -28,7 +27,9 @@ namespace Wizard5.Functionality.Component
         {
             if (gameEvent is GE_Collide move)
             {
+                
                 gameEvent.Response = new R_CollideResult(false);
+                
             }
         }
     }
