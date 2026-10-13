@@ -60,7 +60,16 @@ namespace Wizard5.Functionality.Component
                     ActivateLight(true);
                 }
             }
-           
+            if (gameEvent is GE_Death)
+            {
+                if (Lit)
+                {
+                    ActivateLight(false);
+                }
+            }
+
+
+
         }
     }
 }

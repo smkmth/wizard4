@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Wizard5.Functionality.Component;
 
 namespace Wizard5.Functionality
 {
+
+
+
     public class Map
     {
         public List<GameEntity> Entities { get; set; } = new List<GameEntity>();
@@ -15,7 +19,7 @@ namespace Wizard5.Functionality
 
         public string CurrentMap = "maps/prisoncell";
 
-  
+
         public void LoadMap(string mapPath)
         {
             Entities.Clear();
@@ -41,9 +45,12 @@ namespace Wizard5.Functionality
             {
                 ent.ResolveGameEvent(startGameEvent);
             }
+
+
             Game.Instance.FOV.LoadFOV();
         }
 
+      
         public void TriggerGlobalEvent(GameEvent gameEvent)
         {
             foreach (var ent in Entities)

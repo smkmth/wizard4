@@ -22,7 +22,10 @@ namespace Wizard5.Functionality
         public int FOVID;
         public int Radius;
 
+        public int Falloff1;
+        public int Falloff2;
 
+        public (int,int) OldPos =(-1,-1);
         public GameEntity Entity;
 
         public FOVSubscriber(int radius, GameEntity entity, FOVType type)
@@ -31,75 +34,72 @@ namespace Wizard5.Functionality
             FOVID = FOVIDCounter++;
             Entity = entity;
             Type = type;
-            
+            Falloff1 = 0;
+            Falloff1 = 1;
+
         }
     }
 
- 
-    public class Cell
-    {
-        public bool IsTransparent()
-        {
-            return true;
-        }
 
-        public bool IsWalkable()
-        {
-            return true;
-        }
-
-        public float light;
-        public int x;
-        public int y;
-
-    }
 
     public class FOV
     {
 
-        public Cell[,] Cells { get; set; }
 
-        public List<FOVSubscriber> FOVSubscribers { get; set; } = new List<FOVSubscriber>();
+        public FOVMap FOVMap;
+        public FieldOfView LightFOV;
 
-        HashSet<(int, int)> opaquePositions = new HashSet<(int, int)>();
-   
+        public List<FOVSubscriber> FOVSubscribers = new List<FOVSubscriber>();
+
         public void LoadFOV()
         {
-            Cells = new Cell[GameSettings.GAME_HEIGHT, GameSettings.GAME_WIDTH];
-            for (int y = 0; y < GameSettings.GAME_HEIGHT; y++)
+            FOVMap = new FOVMap();
+            foreach (var ents in Game.Instance.Map.Entities)
             {
-                for (int x = 0; x < GameSettings.GAME_WIDTH; x++)
+                if (ents.HasComponent<Opaque>())
                 {
-                    Cells[y, x] = new Cell();
+                    var pos = ents.GetPosition();
+                    FOVMap.GetCell(pos.Item1, pos.Item2).transparent = false;
                 }
             }
-
-            foreach (var ent in Game.Instance.Map.Entities)
+            foreach (Cell cell in FOVMap.cells)
             {
-                if (ent.HasComponent<Opaque>())
-                {
-                    opaquePositions.Add(ent.GetPosition());
-                }
-
+                cell.light = 0;
             }
+
+            LightFOV = new FieldOfView(FOVMap);
 
         }
 
 
         public void CalculateFOVs()
         {
-            ClearAllVisibility();
-       
-            Game.Instance.UnderlaySurface.Fill(Color.Transparent,Color.Blue);
-            foreach (var sub in FOVSubscribers)
+            LightFOV.ClearFov();
+            foreach (var cell in FOVMap.cells)
             {
-                CalculateFOV(sub, opaquePositions);
+                cell.light = 0;
             }
-            foreach (var cell in LightVisibility)
+            for(int i = 0; i< FOVSubscribers.Count; i++)
             {
-                Game.Instance.UnderlaySurface.SetBackground(cell.X, cell.Y, Color.LightYellow);
+                var light = FOVSubscribers[i];
+                if (light.Type == FOVType.Light)
+                {
+                    var pos = light.Entity.GetPosition();
+                    if (light.OldPos != pos)
+                    {
+                        light.OldPos = pos;
+                        LightFOV.AppendFov(pos.Item1, pos.Item2, light.Radius, true, light.Falloff1, light.Falloff2);
+                    }
+                }
             }
-            
+
+            Game.Instance.UnderlaySurface.Clear();
+      
+            foreach (var cell in FOVMap.cells)
+            {
+                Game.Instance.UnderlaySurface.SetBackground(cell.x, cell.y, Color.DarkBlue * cell.light);
+            }
+
 
         }
 
@@ -123,120 +123,10 @@ namespace Wizard5.Functionality
             }
         }
 
-        public bool CanISee(int x, int y, int fovID)
-        {
-            return Cells[x, y].CanEntitySee(fovID);
-        }
-
-        public List<Point> GetVisibleCells(int fovID)
-        {
-            var viscells = new List<Point>();
-            for (int y = 0; y < GameSettings.GAME_HEIGHT; y++)
-            {
-                for (int x = 0; x < GameSettings.GAME_WIDTH; x++)
-                {
-                    if (Cells[y, x].CanEntitySee(fovID))
-                    {
-                        viscells.Add(new Point(x, y));
-                    }
-                }
-            }
-            return viscells;
-        }
-        public List<Point> LightVisibility { get; set; } = new List<Point>();
 
 
-        public void CalculateFOV(FOVSubscriber sub, HashSet<(int, int)> opaquePositions)
-        {
-            var pt = sub.Entity.GetPosition();
-            var sourceY = pt.Item1;
-            var sourceX = pt.Item2;
-
-            Cells[sourceY, sourceX].SetVisible(sub.FOVID, true);
-            for (int y = Math.Max(0, sourceY - sub.Radius); y <= Math.Min(GameSettings.GAME_HEIGHT - 1, sourceY + sub.Radius); y++)
-            {
-                for (int x = Math.Max(0, sourceX - sub.Radius); x <= Math.Min(GameSettings.GAME_WIDTH - 1, sourceX + sub.Radius); x++)
-                {
-                    // Skip the source cell (already marked visible)
-                    if (x == sourceX && y == sourceY)
-                        continue;
-
-                    // Check distance
-                    int dx = x - sourceX;
-                    int dy = y - sourceY;
-                    int distSquared = dx * dx + dy * dy;
-                    if (distSquared > sub.Radius * sub.Radius)
-                        continue;
-
-                    // Check line of sight using Bresenham's line algorithm
-                    bool canSee = IsLineOfSightClear(sourceX, sourceY, x, y, opaquePositions);
-                    if (sub.Type == FOVType.Light)
-                    {
-                        if (canSee)
-                        {
-                            LightVisibility.Add((y,x));
-                        }
-
-                    }
-                    else
-                    {
-                        Cells[y, x].SetVisible(sub.FOVID, canSee);
-                    }
-                }
-            }
-        }
-
-    
-        private bool IsLineOfSightClear(int x0, int y0, int x1, int y1, HashSet<(int, int)> opaquePositions)
-        {
-            int dx = Math.Abs(x1 - x0);
-            int dy = Math.Abs(y1 - y0);
-            int sx = x0 < x1 ? 1 : -1;
-            int sy = y0 < y1 ? 1 : -1;
-            int err = dx - dy;
-
-            int x = x0;
-            int y = y0;
-
-            while (true)
-            {
-                // Check if this position is blocked (but allow the target position)
-                if ((x != x0 || y != y0) && (x != x1 || y != y1) && opaquePositions.Contains((x, y)))
-                {
-                    return false; // Line of sight blocked
-                }
-
-                // Reached target
-                if (x == x1 && y == y1)
-                {
-                    return true;
-                }
-
-                // Bresenham's line algorithm
-                int e2 = 2 * err;
-                if (e2 > -dy)
-                {
-                    err -= dy;
-                    x += sx;
-                }
-                if (e2 < dx)
-                {
-                    err += dx;
-                    y += sy;
-                }
-            }
-        }
-
-        public void ClearAllVisibility()
-        {
-            LightVisibility.Clear();
-            for (int y = 0; y < GameSettings.GAME_HEIGHT; y++)
-            {
-                for (int x = 0; x < GameSettings.GAME_WIDTH; x++)
-                {
-                    Cells[y, x].ClearVisibility();
-                }
-            }
-        }
     }
+
+
+
 }

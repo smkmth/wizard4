@@ -5,33 +5,46 @@ using System.Text;
 namespace Wizard5.Functionality
 {
     using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Input;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Runtime.CompilerServices;
+    using System.Security;
     using Wizard5.Functionality.Component;
+
     public class Cell
     {
-        public bool IsTransparent()
-        {
-            return true;
-        }
-
-        public bool IsWalkable()
-        {
-            return true;
-        }
+   
 
         public float light;
         public int x;
         public int y;
 
+        public bool transparent = true;
+
+        public Cell(int x, int y)
+        {
+            this.x = x;
+            this.y = y;
+        }
     }
 
     public class FOVMap
     {
+
         public Cell[] cells = new Cell[GameSettings.GAME_HEIGHT * GameSettings.GAME_WIDTH];
+
+        public FOVMap()
+        {
+            for (int x = 0; x < GameSettings.GAME_WIDTH; x++)
+            {
+                for (int y = 0; y < GameSettings.GAME_HEIGHT; y++)
+                {
+                    cells[IndexFor(x,y)]= new Cell(x, y);
+                }
+            }
+        }
+
+
         private int ClampX(int x)
         {
             return (x < 0) ? 0 : (x > GameSettings.GAME_WIDTH - 1) ? GameSettings.GAME_WIDTH - 1 : x;
@@ -139,7 +152,7 @@ namespace Wizard5.Functionality
             {
                 yield return GetCell(xOrigin, yOrigin);
 
-                if (GetCell(xOrigin, yOrigin).IsWalkable() == false)
+                if (GetCell(xOrigin, yOrigin).transparent == false)
                 {
                     if (first)
                     {
@@ -277,11 +290,13 @@ namespace Wizard5.Functionality
         /// <param name="map">The Map that this FieldOfView class will use to perform its field-of-view calculations</param>
         public FieldOfView(FOVMap map)
         {
+            _map = map;
             _inFov = new HashSet<int>();
         }
 
         internal FieldOfView(FOVMap map, HashSet<int> inFov)
         {
+            _map = map;
             _inFov = inFov;
         }
 
@@ -377,7 +392,7 @@ namespace Wizard5.Functionality
 
                     }
 
-                    if (cell.IsTransparent())
+                    if (cell.transparent)
                     {
                         _inFov.Add(_map.IndexFor(cell));
                     }
@@ -403,7 +418,7 @@ namespace Wizard5.Functionality
             return new ReadOnlyCollection<Cell>(cells);
         }
 
-        private void ClearFov()
+        public void ClearFov()
         {
             _inFov.Clear();
         }
@@ -441,10 +456,10 @@ namespace Wizard5.Functionality
                         break;
                     }
             }
-            if (!IsInFov(x, y) && _map.GetCell(x, y).IsTransparent() == false)
+            if (!IsInFov(x, y) && _map.GetCell(x, y).transparent == false)
             {
-                if ((_map.GetCell(x1, y1).IsTransparent() && IsInFov(x1, y1)) || (_map.GetCell(x2, y2).IsTransparent() && IsInFov(x2, y2))
-                        || (_map.GetCell(x2, y1).IsTransparent() && IsInFov(x2, y1)))
+                if ((_map.GetCell(x1, y1).transparent && IsInFov(x1, y1)) || (_map.GetCell(x2, y2).transparent && IsInFov(x2, y2))
+                        || (_map.GetCell(x2, y1).transparent && IsInFov(x2, y1)))
                 {
                     _inFov.Add(_map.IndexFor(x, y));
                 }

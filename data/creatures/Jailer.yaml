@@ -32,7 +32,7 @@ components:
    ComponentName: Key
 -  #light
    ComponentName: Light
-   Radius: 2
+   Radius: 10
    Lit: true
 
 
