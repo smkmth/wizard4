@@ -1,4 +1,4 @@
-name: Knight
+name: Jailer
 components:
 -  #transform
    ComponentName: Transform
@@ -20,7 +20,7 @@ components:
 -  #health
    ComponentName: Health
    BaseValue: 1
-   Corpse: '>KnightCorpse'
+   Corpse: '>JailerCorpse'
 -  #attack
    ComponentName: Attack
    Damage: 3
@@ -28,4 +28,11 @@ components:
    ComponentName: Possesable
 -  #abilityholder
    ComponentName: AbilityHolder
+-  #key
+   ComponentName: Key
+-  #light
+   ComponentName: Light
+   Radius: 2
+   Lit: true
+
 

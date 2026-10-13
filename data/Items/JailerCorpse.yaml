@@ -1,13 +1,13 @@
-name: KnightCorpse
+name: JailerCorpse
 components:
 -  #transform
    ComponentName: Transform
 -  #renderer
    ComponentName: Renderer
    Color:
-      B: 128
-      G: 128
-      R: 128
+      B: 0
+      G: 0
+      R: 255
       A: 255
    BackgroundColor:
       B: 0

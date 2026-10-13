@@ -17,3 +17,5 @@ components:
    Symbol: '#'
 -  #collider	
    ComponentName: Collider
+-  #opaque
+   ComponentName : Opaque

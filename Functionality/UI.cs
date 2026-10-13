@@ -39,13 +39,15 @@ namespace Wizard5.Functionality
 
         public string DebugString { get; set; } = "";   
 
-        public void Draw(ScreenSurface uiSurface)
+        public void Draw(TimeSpan delta)
         {
-            uiSurface.Print(2, 2, MouseOver);
-            uiSurface.Print(2, 4, "Z = " + ZKey);
-            uiSurface.Print(2, 6, "X = " + XKey);
-            uiSurface.Print(2, 8, "C = " + CKey);
-            uiSurface.Print(2, 15, DebugString);
+            Game.Instance.UISurface.Clear();
+            Game.Instance.UISurface.Print(2, 2, MouseOver);
+            Game.Instance.UISurface.Print(2, 4, "Z = " + ZKey);
+            Game.Instance.UISurface.Print(2, 6, "X = " + XKey);
+            Game.Instance.UISurface.Print(2, 8, "C = " + CKey);
+            Game.Instance.UISurface.Print(2, 15, DebugString);
+            UpdateFloatingText(delta);
         }
 
         public void RegisterAbilities(Dictionary<char, AbilityContainer> abilities)
@@ -76,5 +78,62 @@ namespace Wizard5.Functionality
             }
 
         }
+
+        List<FloatingText> floatingTexts = new List<FloatingText>();
+
+        public void OverlaySurfaceEffect(string text, float timetoshow, Point pos, bool increaseHeight = true)
+        {
+            if (increaseHeight)
+            {
+                pos = new Point(pos.X, pos.Y - 1);
+            }
+            var floatingText = new FloatingText(text, pos, timetoshow);
+            floatingTexts.Add(floatingText);
+        }
+
+        public void UpdateFloatingText(TimeSpan delta)
+        {
+            for (int i = floatingTexts.Count - 1; i >= 0; i--)
+            {
+                floatingTexts[i].Update(delta);
+                if (floatingTexts[i].Lifetime <= 0)
+                {
+                    floatingTexts[i].Finish();
+                    floatingTexts.RemoveAt(i);
+                }
+            }
+        }
+
     }
+
+    public class FloatingText
+    {
+        public Console Console { get; }
+        public Point Position { get; set; }
+        public float Lifetime { get; set; }
+
+        public FloatingText(string text,  Point location, float lifetime)
+        {
+            Lifetime = lifetime;
+            Console = new Console(text.Length, 1);
+            Console.Position = location;
+            Console.Print(0, 0, text,Color.White,Color.Black);
+            Game.Instance.OverlaySurface.Children.Add(Console);
+        }
+
+        public void Update(TimeSpan delta)
+        {
+            if (Lifetime > 0)
+            {
+                Lifetime -= (float)delta.TotalSeconds;
+            }
+        }
+
+        public void Finish()
+        {
+            Game.Instance.OverlaySurface.Children.Remove(Console);
+            Console.Dispose();
+        }
+    }
+    
 }

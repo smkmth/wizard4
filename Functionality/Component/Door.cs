@@ -24,7 +24,7 @@ namespace Wizard5.Functionality.Component
 
         public IGameComponent Copy(GameEntity newOwner)
         {
-            return new Door(newOwner,isOpen) { };
+            return new Door(newOwner, isOpen) { };
         }
 
         public void ReceiveEvent(GameEvent gameEvent)
@@ -34,17 +34,19 @@ namespace Wizard5.Functionality.Component
                 if (isOpen)
                 {
                     gameEvent.Response = new R_CollideResult(true);
+
                 }
-                else 
+                else
                 {
                     gameEvent.Response = new R_CollideResult(false);
-
-                    if (move.movingEntity.Name == "Knight")
+                    Game.Instance.UI.OverlaySurfaceEffect("Locked!", 1.0f, Owner.GetPosition());
+                    var respose = move.movingEntity.ResolveGameEvent(new GE_UnlockDoor()) as R_UnlockDoor;
+                    if (respose != null && respose.Success)
                     {
+                        Game.Instance.UI.OverlaySurfaceEffect("Unlocked!", 1.0f, Owner.GetPosition());
                         isOpen = true;
                         Owner.ResolveGameEvent(new GE_ChangeRenderSymbol('-'));
                     }
-               
                 }
             }
         }

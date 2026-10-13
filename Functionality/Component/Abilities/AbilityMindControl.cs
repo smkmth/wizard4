@@ -28,6 +28,8 @@ namespace Wizard5.Functionality.Component.Abilities
             var targetAbility = trigger as GE_TriggerAbilityTargetEntity;
             targetAbility.Target.ResolveGameEvent(new GE_PossessEntity(Owner));
 
+            Game.Instance.UI.OverlaySurfaceEffect("Possessed!", 1.0f, targetAbility.Target.GetPosition());
+
 
         }
 

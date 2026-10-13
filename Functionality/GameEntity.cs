@@ -3,16 +3,21 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using Wizard5.Functionality;
 using Wizard5.Functionality.Component;
 
 namespace Wizard5
 {
+
 
     public class GameEntity
     {
         public static int EntityCounter;
         public int EntityID;
         public string Name;
+
+  
+
         public List<IGameComponent> Components { get; set; } = new List<IGameComponent>();
 
 
@@ -61,6 +66,25 @@ namespace Wizard5
             }
             return (-1, 1);
         }
+        public bool HasComponent<T>() where T : IGameComponent
+        {
+            var comp = TryGetComponent<T>();
+            return (comp != null);
+        }
 
+        public IGameComponent TryGetComponent<T>() where T : IGameComponent
+        {
+            foreach (IGameComponent check in Components)
+            {
+                if (check.GetType() == typeof(T))
+                {
+                    return check;
+                }
+
+            }
+            return null;
+        }
+
+      
     }
 }

@@ -15,23 +15,45 @@ namespace Wizard5
         public static Game Instance;
         public Map Map;
         public UI UI;
+        public FOV FOV;
+        public ScreenSurface MapSurface;
+        public ScreenSurface UISurface;
+        public ScreenSurface OverlaySurface;
+        public ScreenSurface UnderlaySurface;
 
-        public Game()
+
+        public Game(ScreenSurface mapSurface, ScreenSurface uiSurface, ScreenSurface overlaySurface, ScreenSurface underlaySurface)
         {
             Instance = this;
             Map = new Map();
             UI = new UI();
-
+            FOV = new FOV();
             Map.LoadMap(Map.CurrentMap);
+            MapSurface = mapSurface;
+            UISurface = uiSurface;
+            OverlaySurface = overlaySurface;
+            UnderlaySurface = underlaySurface;
+            EndTurn();
         }
 
-      
-        public void Draw(ScreenSurface mapSurface, ScreenSurface uiSurface)
+
+        public void Draw(TimeSpan delta)
         {
-            mapSurface.Clear();
-            Map.Draw(mapSurface);
-            uiSurface.Clear();
-            UI.Draw(uiSurface);
+            MapSurface.Clear();
+            Map.Draw(delta);
+            UI.Draw(delta);
+        }
+
+
+        public void EndTurn()
+        {
+
+            foreach (var ent in Map.Entities)
+            {
+                ent.ResolveGameEvent(new GE_TurnEnd());
+                
+            }
+            FOV.CalculateFOVs();
         }
 
         public void ProcessKeyboard(Keyboard keyboard)

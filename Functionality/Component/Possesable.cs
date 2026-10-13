@@ -6,6 +6,7 @@ namespace Wizard5.Functionality.Component
 {
     public class Possesable : IGameComponent
     {
+        bool isPlayer= false;
         GameEntity currentController;
 
         public Possesable(GameEntity owner)
@@ -15,7 +16,7 @@ namespace Wizard5.Functionality.Component
 
         public GameEntity Owner { get; set; }
 
-        public string ComponentName { get; } = "Player";
+        public string ComponentName { get; } = "Possesable";
 
 
 
@@ -26,10 +27,18 @@ namespace Wizard5.Functionality.Component
 
         public void ReceiveEvent(GameEvent gameEvent)
         {
+
+            if (gameEvent is GE_FinishAction)
+            {
+                if (isPlayer)
+                {
+                    Game.Instance.EndTurn();
+                }
+            }
             if (gameEvent is GE_PlayerUnPossess unpossess)
             {
                 Owner.ResolveGameEvent(new GE_ChangeRenderColor(Color.White, Color.Transparent));
-
+                isPlayer = false;
             }
             if (gameEvent is GE_PossessEntity possess)
             {
@@ -58,6 +67,7 @@ namespace Wizard5.Functionality.Component
             Game.Instance.Map.Player = Owner;
             Game.Instance.Map.TriggerGlobalEvent(new GE_PlayerPossess(Owner));
             Owner.ResolveGameEvent(new GE_ChangeRenderColor(Color.Gold, Color.Transparent));
+            isPlayer = true;
         }
     }
 }

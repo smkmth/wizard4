@@ -16,6 +16,15 @@ namespace Wizard5
     {
     }
 
+    public class GE_FinishAction : GameEvent
+    {
+
+    }
+
+    public class GE_TurnEnd : GameEvent
+    {
+    }
+
     public class GE_RequestPosition : GameEvent
     {
     }
@@ -67,6 +76,19 @@ namespace Wizard5
         public GE_ChangeRenderSymbol(char symbol)
         {
             this.symbol = symbol;
+        }
+    }
+
+    public class GE_UnlockDoor : GameEvent
+    {
+    }
+
+    public class R_UnlockDoor : EventResponse
+    {
+        public bool Success;
+        public R_UnlockDoor(bool success)
+        {
+            Success = success;
         }
     }
 
@@ -218,4 +240,6 @@ namespace Wizard5
     {
 
     }
+
+    
 }

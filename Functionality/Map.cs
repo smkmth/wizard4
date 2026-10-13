@@ -9,7 +9,13 @@ namespace Wizard5.Functionality
         public List<GameEntity> Entities { get; set; } = new List<GameEntity>();
         public GameEntity Player;
 
+        /// <summary>
+        /// 2D array of cells. Access as Cells[y, x].
+        /// </summary>
+
         public string CurrentMap = "maps/prisoncell";
+
+  
         public void LoadMap(string mapPath)
         {
             Entities.Clear();
@@ -35,6 +41,7 @@ namespace Wizard5.Functionality
             {
                 ent.ResolveGameEvent(startGameEvent);
             }
+            Game.Instance.FOV.LoadFOV();
         }
 
         public void TriggerGlobalEvent(GameEvent gameEvent)
@@ -67,7 +74,7 @@ namespace Wizard5.Functionality
             }
             if (charatpt == 'k')
             {
-                CreateEntity("Creatures", "Knight", x, y);
+                CreateEntity("Creatures", "Jailer", x, y);
             }
             if (charatpt == '+')
             {
@@ -116,15 +123,17 @@ namespace Wizard5.Functionality
             return entities;
         }
 
-        public void Draw(ScreenSurface mainSurface)
+        public void Draw(TimeSpan delta)
         {
-            var drawEvent = new GE_Draw(mainSurface);
+            var drawEvent = new GE_Draw(Game.Instance.MapSurface);
             foreach (var entity in Entities)
             {
                 entity.ResolveGameEvent(drawEvent);
             }
             Player.ResolveGameEvent(drawEvent);//lazy just draw player twice
         }
+
+      
 
     }
 }

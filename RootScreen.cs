@@ -4,23 +4,25 @@ namespace Wizard5.Scenes;
 
 class RootScreen : ScreenObject
 {
-    private ScreenSurface _gameSurface;
+    private ScreenSurface _mapSurface;
     private ScreenSurface _uiSurface;
+    private ScreenSurface _overlaySurface;
+    private ScreenSurface _underlaySurface;
     private Game WizardGame;
 
     public RootScreen()
     {
-        _gameSurface = new(GameSettings.GAME_WIDTH, GameSettings.GAME_HEIGHT);
-        _gameSurface.Position = new Point((GameSettings.SCREEN_WIDTH / 2) - GameSettings.GAME_WIDTH / 2,0 );
+        _mapSurface = new(GameSettings.GAME_WIDTH, GameSettings.GAME_HEIGHT);
+        _mapSurface.Position = new Point((GameSettings.SCREEN_WIDTH / 2) - GameSettings.GAME_WIDTH / 2,0 );
 
-        _gameSurface.UseKeyboard = true;
-        _gameSurface.UseMouse = true;
-        _gameSurface.IsFocused = true;
+        _mapSurface.UseKeyboard = true;
+        _mapSurface.UseMouse = true;
+        _mapSurface.IsFocused = true;
 
         // Hook into the surface's own mouse processing
-        _gameSurface.MouseMove += (sender, args) =>
+        _mapSurface.MouseMove += (sender, args) =>
         {
-            if (_gameSurface.Surface.Area.Contains(args.SurfaceCellPosition))
+            if (_mapSurface.Surface.Area.Contains(args.SurfaceCellPosition))
             {
                 WizardGame.ProcessMouse(args);
             }
@@ -40,16 +42,38 @@ class RootScreen : ScreenObject
 
         };
 
-        Children.Add(_uiSurface);
-        Children.Add(_gameSurface);
 
-        WizardGame = new Game();
+        _underlaySurface = new(GameSettings.GAME_WIDTH, GameSettings.GAME_HEIGHT);
+        _underlaySurface.Position = new Point((GameSettings.SCREEN_WIDTH / 2) - GameSettings.GAME_WIDTH / 2, 0);
+
+        _underlaySurface.Surface.Clear();
+
+        _underlaySurface.UseMouse = false;
+        _underlaySurface.UseKeyboard = false;
+
+
+
+        _overlaySurface = new(GameSettings.GAME_WIDTH, GameSettings.GAME_HEIGHT);
+        _overlaySurface.Position = new Point((GameSettings.SCREEN_WIDTH / 2) - GameSettings.GAME_WIDTH / 2, 0);
+
+        _overlaySurface.Surface.Clear();
+
+        _overlaySurface.UseMouse = false;
+        _overlaySurface.UseKeyboard = false;
+
+
+        Children.Add(_underlaySurface);
+        Children.Add(_uiSurface);
+        Children.Add(_mapSurface);
+        Children.Add(_overlaySurface);
+
+        WizardGame = new Game(_mapSurface, _uiSurface, _overlaySurface, _underlaySurface);
 
     }
 
     public override bool ProcessMouse(MouseScreenObjectState state)
     {
-        var mainSurfaceMouseState = new MouseScreenObjectState(_gameSurface, state.Mouse);
+        var mainSurfaceMouseState = new MouseScreenObjectState(_mapSurface, state.Mouse);
 
         WizardGame.ProcessMouse(mainSurfaceMouseState);
         return base.ProcessMouse(state);
@@ -67,7 +91,7 @@ class RootScreen : ScreenObject
         // Base update processes keyboard, mouse, and child components
         base.Update(delta);
 
-        WizardGame.Draw(_gameSurface, _uiSurface);
+        WizardGame.Draw(delta);
         
     }
 }

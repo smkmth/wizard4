@@ -53,15 +53,16 @@ namespace Wizard5.Functionality.Component
                         if (attackResult != null)
                         {
                             ent.ResolveGameEvent(new GE_TakeDamage(attackResult.damage));
+                            Owner.ResolveGameEvent(new GE_FinishAction());
 
                         }
                         return; //we cant move
                     }
                 }
 
-
                 x += move.DeltaX;
                 y += move.DeltaY;
+                Owner.ResolveGameEvent(new GE_FinishAction());
             }
         }
     }
