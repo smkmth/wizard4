@@ -28,11 +28,19 @@ components:
 -  #key
    ComponentName: Key
 -  #light
-   ComponentName: Light
-   Radius: 10
-   Lit: true
+   ComponentName: FOVComponent
+   Radius: 15
+   FovType: Light
+-  #ai
+   ComponentName: FOVComponent
+   Radius: 15
+   FovType: Sight
 -  #abilityendmindcontrol
    ComponentName: AbilityEndMindControl
-
+-  #opaque
+   ComponentName : Opaque
+   IsStatic: false
+-  #ai
+   ComponentName : AI
 
 

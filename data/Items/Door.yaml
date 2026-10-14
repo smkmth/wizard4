@@ -18,3 +18,7 @@ components:
 -  #collider	
    ComponentName: Door
    IsOpen: false
+-  #opaque
+   ComponentName : Opaque
+   IsStatic: false
+

@@ -12,7 +12,7 @@
         { "Wall", Color.Black},
         { "Shadow", Color.Navy },
         { "Light", Color.LightYellow },
-        { "Player", Color.OliveDrab },
+        { "Player", Color.YellowGreen },
         { "Knight", Color.Black}
     };
 

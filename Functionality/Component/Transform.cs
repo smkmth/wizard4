@@ -43,6 +43,7 @@ namespace Wizard5.Functionality.Component
                 var entsAtFuturePosition = Game.Instance.Map.GetEntitiesAtPosition(x + move.DeltaX, y + move.DeltaY);
                 var canMove = true;
                 var tryingToCollide = new GE_Collide(Owner);
+                var oldpos = (x, y);
 
                 foreach (var ent in entsAtFuturePosition)
                 {
@@ -53,7 +54,7 @@ namespace Wizard5.Functionality.Component
                         if (attackResult != null)
                         {
                             ent.ResolveGameEvent(new GE_TakeDamage(attackResult.damage));
-                            Owner.ResolveGameEvent(new GE_FinishAction());
+                            Owner.ResolveGameEvent(new GE_FinishAction(oldpos,(x,y)));
 
                         }
                         return; //we cant move
@@ -62,7 +63,8 @@ namespace Wizard5.Functionality.Component
 
                 x += move.DeltaX;
                 y += move.DeltaY;
-                Owner.ResolveGameEvent(new GE_FinishAction());
+                Owner.ResolveGameEvent(new GE_FinishAction(oldpos, (x, y)));
+                Game.Instance.Map.TriggerGlobalEvent(new GE_SomthingMoved(Owner));
             }
         }
     }

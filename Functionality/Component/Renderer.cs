@@ -44,8 +44,8 @@ namespace Wizard5.Functionality.Component
 
         public void Draw(ScreenSurface mainSurface)
         {
-            var position = (R_RequestPosition)Owner?.ResolveGameEvent(new GE_RequestPosition());
-            var light = Game.Instance.FOV.FOVMap.GetCell(position.X,position.Y).light;
+            var position = Owner.GetPosition();
+            var light = Game.Instance.FOV.GetCell(position.X,position.Y).light;
             mainSurface.SetForeground(position.X, position.Y, color);
             mainSurface.SetBackground(position.X, position.Y, backgroundColor);
             mainSurface.SetGlyph(position.X, position.Y, symbol);

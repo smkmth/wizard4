@@ -18,7 +18,22 @@ namespace Wizard5
 
     public class GE_FinishAction : GameEvent
     {
+        public Point oldPos;
+        public Point newPos;
 
+        public GE_FinishAction(Point oldPos, Point newPos)
+        {
+            this.oldPos = oldPos;
+            this.newPos = newPos;
+        }
+
+        public bool moved
+        {
+            get
+            {
+                return oldPos != newPos;
+            }
+        }
     }
 
     public class GE_TurnEnd : GameEvent
@@ -29,7 +44,7 @@ namespace Wizard5
     {
     }
 
-    public class  R_RequestPosition : EventResponse
+    public class R_RequestPosition : EventResponse
     {
         public int X { get; set; }
         public int Y { get; set; }
@@ -60,7 +75,7 @@ namespace Wizard5
         }
     }
 
-    public class GE_Draw : GameEvent 
+    public class GE_Draw : GameEvent
     {
         public ScreenSurface Surface;
 
@@ -134,14 +149,14 @@ namespace Wizard5
     public class R_CollideResult : EventResponse
     {
         public bool canMove = false;
-        
+
         public R_CollideResult(bool canMove)
         {
             this.canMove = canMove;
         }
     }
 
-    public class GE_TakeDamage :GameEvent
+    public class GE_TakeDamage : GameEvent
     {
         public int damageAmount;
 
@@ -187,21 +202,21 @@ namespace Wizard5
 
     public class R_RegisterAbility : EventResponse
     {
-        public List<(string, AbilityType)> AbilityContainers = new List<(string, AbilityType) >();
+        public List<(string, AbilityType)> AbilityContainers = new List<(string, AbilityType)>();
 
     }
-    
+
     public class GE_RegisterAbilities : GameEvent
     {
         public GameEvent AbilityTriggerEvent;
-    }   
+    }
 
     public class GE_TriggerAbilityKey : GameEvent
     {
         public char AbilityKey;
 
         //we dont know what the ability needs - just add everything
-        public GameEntity? Target; 
+        public GameEntity? Target;
         public Point TargetPoint;
 
         public GE_TriggerAbilityKey(char abilityKey)
@@ -210,7 +225,7 @@ namespace Wizard5
         }
     }
 
-    public class  GE_TriggerAbility : GameEvent
+    public class GE_TriggerAbility : GameEvent
     {
         public string AbilityName;
 
@@ -252,6 +267,50 @@ namespace Wizard5
     {
 
     }
+    public class GE_SetOpaque : GameEvent
+    {
+        public bool Transparent;
 
-    
+        public GE_SetOpaque(bool value)
+        {
+            Transparent = value;
+        }
+    }
+
+
+    public class GE_CheckOpaque : GameEvent
+    {
+        public bool StaticCheck;
+
+        public GE_CheckOpaque(bool staticCheck)
+        {
+            StaticCheck = staticCheck;
+        }
+    }
+
+    public class R_Opaque : EventResponse
+    {
+        public bool isOpaque;
+
+        public R_Opaque(bool isOpaque)
+        {
+            this.isOpaque = isOpaque;
+        }
+    }
+
+    public class GE_SomthingMoved : GameEvent
+    {
+        public GameEntity Mover;
+
+        public GE_SomthingMoved(GameEntity mover)
+        {
+            Mover = mover;
+        }
+    }
+
+    public class GE_CheckSight : GameEvent
+    {
+
+    }
+
 }

@@ -27,3 +27,6 @@ components:
    ComponentName: AbilityHolder
 -  #abilitymindcontrol
    ComponentName: AbilityMindControl
+-  #opaque
+   ComponentName : Opaque
+   IsStatic: false

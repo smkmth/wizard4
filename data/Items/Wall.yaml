@@ -16,3 +16,4 @@ components:
    ComponentName: Collider
 -  #opaque
    ComponentName : Opaque
+   IsStatic: true

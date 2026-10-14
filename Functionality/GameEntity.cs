@@ -57,7 +57,7 @@ namespace Wizard5
             return newOwner;
         }
 
-        public (int,int) GetPosition()
+        public Point GetPosition()
         {
             var pos = (R_RequestPosition)ResolveGameEvent(new GE_RequestPosition());
             if (pos != null)

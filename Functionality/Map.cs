@@ -121,7 +121,7 @@ namespace Wizard5.Functionality
             foreach (var entity in Entities)
             {
                 var pos = entity.GetPosition();
-                if (pos.Item1 == x && pos.Item2 == y)
+                if (pos.X == x && pos.Y == y)
                 {
                     entities.Add(entity);
                 }
@@ -134,7 +134,7 @@ namespace Wizard5.Functionality
         {
             Game.Instance.UnderlaySurface.Fill(Color.Transparent,Color.Gray);
 
-            foreach (var cell in Game.Instance.FOV.FOVMap.cells)
+            foreach (var cell in Game.Instance.FOV.cells)
             {
                 Game.Instance.UnderlaySurface.SetBackground(cell.x, cell.y, Color.Lerp(GameSettings.GameColors["Shadow"], GameSettings.GameColors["Light"], cell.light));
             }

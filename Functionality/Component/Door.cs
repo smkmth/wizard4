@@ -46,6 +46,7 @@ namespace Wizard5.Functionality.Component
                         Game.Instance.UI.OverlaySurfaceEffect("Unlocked!", 1.0f, Owner.GetPosition());
                         isOpen = true;
                         Owner.ResolveGameEvent(new GE_ChangeRenderSymbol('-'));
+                        Owner.ResolveGameEvent(new GE_SetOpaque(true));
                     }
                 }
             }
