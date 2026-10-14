@@ -64,6 +64,8 @@ namespace Wizard5
     {
         public ScreenSurface Surface;
 
+        public float Light;
+
         public GE_Draw(ScreenSurface surface)
         {
             Surface = surface;
@@ -101,6 +103,16 @@ namespace Wizard5
         {
             this.color = color;
             this.bgcolor = bgcolor;
+        }
+    }
+
+    public class R_ChangeRenderColor : EventResponse
+    {
+        public Color oldColor;
+
+        public R_ChangeRenderColor(Color oldColor)
+        {
+            this.oldColor = oldColor;
         }
     }
 

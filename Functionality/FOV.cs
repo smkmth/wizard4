@@ -35,7 +35,7 @@ namespace Wizard5.Functionality
             Entity = entity;
             Type = type;
             Falloff1 = 0;
-            Falloff1 = 1;
+            Falloff2 = 0;
 
         }
     }
@@ -93,12 +93,7 @@ namespace Wizard5.Functionality
                 }
             }
 
-            Game.Instance.UnderlaySurface.Clear();
-      
-            foreach (var cell in FOVMap.cells)
-            {
-                Game.Instance.UnderlaySurface.SetBackground(cell.x, cell.y, Color.DarkBlue * cell.light);
-            }
+        
 
 
         }

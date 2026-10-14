@@ -2,6 +2,7 @@
 using SadConsole.Entities;
 using System.Collections;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Wizard5;
 using YamlDotNet.RepresentationModel;
@@ -348,16 +349,20 @@ public static class YamlDataReader
                 }
             }
         }
-        //else
-        //{
-        //    foreach (var item in component.Children)
-        //    {
-        //        if (item.Key.ToString() == "packedValue")
-        //        {
-        //            col = new Microsoft.Xna.Framework.Color(uint.Parse(item.Value.ToString()));
-        //        }
-        //    }
-        //}
+        else
+        {
+            foreach (var item in component.Children)
+            {
+                if (item.Key.ToString() == "NamedColor")
+                {
+                    if (GameSettings.GameColors.ContainsKey(item.Value.ToString()))
+                    {
+                        return GameSettings.GameColors[item.Value.ToString()];
+                    }
+
+                }
+            }
+        }
 
         return new SadRogue.Primitives.Color(r,g,b,a);
     }

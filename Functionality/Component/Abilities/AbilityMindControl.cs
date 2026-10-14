@@ -11,7 +11,7 @@ namespace Wizard5.Functionality.Component.Abilities
         public AbilityMindControl(GameEntity owner) : base(owner)
         {
             Owner = owner;
-            abilityName = "MindControl";
+            abilityName = "Mind Control";
         }
 
         protected override IGameComponent CopyImplementation(GameEntity newOwner)

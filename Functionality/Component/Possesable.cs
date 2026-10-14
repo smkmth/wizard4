@@ -7,6 +7,7 @@ namespace Wizard5.Functionality.Component
     public class Possesable : IGameComponent
     {
         bool isPlayer= false;
+        Color oldColor = Color.White;
         GameEntity currentController;
 
         public Possesable(GameEntity owner)
@@ -37,8 +38,11 @@ namespace Wizard5.Functionality.Component
             }
             if (gameEvent is GE_PlayerUnPossess unpossess)
             {
-                Owner.ResolveGameEvent(new GE_ChangeRenderColor(Color.White, Color.Transparent));
+                Owner.ResolveGameEvent(new GE_ChangeRenderColor(oldColor, Color.Transparent));
                 isPlayer = false;
+                currentController.ResolveGameEvent(new GE_PossessEntity(null));
+                currentController = null;
+
             }
             if (gameEvent is GE_PossessEntity possess)
             {
@@ -64,9 +68,11 @@ namespace Wizard5.Functionality.Component
 
         private void Possess()
         {
+
             Game.Instance.Map.Player = Owner;
             Game.Instance.Map.TriggerGlobalEvent(new GE_PlayerPossess(Owner));
-            Owner.ResolveGameEvent(new GE_ChangeRenderColor(Color.Gold, Color.Transparent));
+            var responce = (R_ChangeRenderColor)Owner.ResolveGameEvent(new GE_ChangeRenderColor(GameSettings.GameColors["Player"], Color.Transparent));
+            oldColor = responce.oldColor;
             isPlayer = true;
         }
     }

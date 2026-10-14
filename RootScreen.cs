@@ -61,6 +61,10 @@ class RootScreen : ScreenObject
         _overlaySurface.UseMouse = false;
         _overlaySurface.UseKeyboard = false;
 
+        _underlaySurface.SortOrder = 1;
+        _uiSurface.SortOrder = 1;
+        _mapSurface.SortOrder = 2;
+        _overlaySurface.SortOrder = 3;
 
         Children.Add(_underlaySurface);
         Children.Add(_uiSurface);

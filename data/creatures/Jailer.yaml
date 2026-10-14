@@ -5,10 +5,7 @@ components:
 -  #renderer
    ComponentName: Renderer
    Color:
-      B: 128
-      G: 128
-      R: 128
-      A: 255
+      NamedColor: "Knight"
    BackgroundColor:
       B: 0
       G: 0
@@ -34,5 +31,8 @@ components:
    ComponentName: Light
    Radius: 10
    Lit: true
+-  #abilityendmindcontrol
+   ComponentName: AbilityEndMindControl
+
 
 

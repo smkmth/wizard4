@@ -5,10 +5,7 @@ components:
 -  #renderer
    ComponentName: Renderer
    Color:
-      B: 255
-      G: 255
-      R: 255
-      A: 255
+      NamedColor: "Player"
    BackgroundColor:
       B: 0
       G: 0

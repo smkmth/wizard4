@@ -36,6 +36,7 @@ namespace Wizard5.Functionality.Component
             }
             if (gameEvent is GE_ChangeRenderColor color)
             {
+                color.Response = new R_ChangeRenderColor(this.color);
                 this.color = color.color;
                 this.backgroundColor= color.bgcolor;
             }
@@ -44,7 +45,8 @@ namespace Wizard5.Functionality.Component
         public void Draw(ScreenSurface mainSurface)
         {
             var position = (R_RequestPosition)Owner?.ResolveGameEvent(new GE_RequestPosition());
-            mainSurface.SetForeground(position.X, position.Y, color );
+            var light = Game.Instance.FOV.FOVMap.GetCell(position.X,position.Y).light;
+            mainSurface.SetForeground(position.X, position.Y, color);
             mainSurface.SetBackground(position.X, position.Y, backgroundColor);
             mainSurface.SetGlyph(position.X, position.Y, symbol);
 

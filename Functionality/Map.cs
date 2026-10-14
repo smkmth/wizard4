@@ -132,6 +132,13 @@ namespace Wizard5.Functionality
 
         public void Draw(TimeSpan delta)
         {
+            Game.Instance.UnderlaySurface.Fill(Color.Transparent,Color.Gray);
+
+            foreach (var cell in Game.Instance.FOV.FOVMap.cells)
+            {
+                Game.Instance.UnderlaySurface.SetBackground(cell.x, cell.y, Color.Lerp(GameSettings.GameColors["Shadow"], GameSettings.GameColors["Light"], cell.light));
+            }
+
             var drawEvent = new GE_Draw(Game.Instance.MapSurface);
             foreach (var entity in Entities)
             {

@@ -4,11 +4,8 @@ components:
    ComponentName: Transform
 -  #renderer
    ComponentName: Renderer
-   Color:
-      B: 255
-      G: 255
-      R: 255
-      A: 255
+   Color: 
+      NamedColor: "Wall"
    BackgroundColor:
       B: 0
       G: 0
